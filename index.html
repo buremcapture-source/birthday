@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Queenia Yuanti</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #fdf6f9;
+  color: #4a1d33;
+  font-family: 'Jost', sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#canvas-bg {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 60% at 15% 20%, rgba(255,182,193,0.5) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 70% at 85% 80%, rgba(255,105,135,0.25) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,220,230,0.4) 0%, transparent 70%);
+}
+
+/* --- ANIMASI TRANSISI HALAMAN --- */
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  min-height: 100vh;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page.active {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Khusus halaman galeri agar konten mulai dari atas */
+#page5.active {
+  justify-content: flex-start;
+  padding-top: 2rem;
+  padding-bottom: 5rem;
+}
+
+.page.fade-out {
+  display: flex;
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+
+/* --- ELEMEN FLOATING --- */
+.floating-element {
+  position: fixed;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.6;
+  animation: float-up var(--duration) linear infinite;
+  font-size: var(--size);
+}
+
+@keyframes float-up {
+  0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+}
+
+.corner-decor {
+  position: fixed;
+  font-size: 40px;
+  z-index: 5;
+  opacity: 0.3;
+  pointer-events: none;
+}
+.top-l { top: 20px; left: 20px; }
+.top-r { top: 20px; right: 20px; }
+.bot-l { bottom: 20px; left: 20px; }
+.bot-r { bottom: 20px; right: 20px; }
+
+/* ===== LOGIN PAGE ===== */
+.login-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(15px);
+  padding: 3rem 2rem;
+  border-radius: 2.5rem;
+  box-shadow: 0 15px 45px rgba(160, 41, 77, 0.15);
+  border: 1px solid rgba(160, 41, 77, 0.2);
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1.5px solid rgba(160, 41, 77, 0.2);
+  text-align: center;
+  margin-bottom: 1rem;
+  outline: none;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: none;
+  background: linear-gradient(135deg, #ff6b9d, #c2185b);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+/* ===== TANTANGAN PAGE (GAME) ===== */
+.game-container {
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.birthday-photo-frame {
+  width: 100%;
+  aspect-ratio: 1/1;
+  max-width: 450px;
+  border-radius: 1.5rem;
+  border: 6px solid white;
+  box-shadow: 0 15px 40px rgba(160, 41, 77, 0.2);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.birthday-photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  display: block;
+}
+
+.btn-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  position: relative;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+}
+
+.btn-next {
+  background: #c2185b;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(194, 24, 91, 0.3);
+  transition: all 0.3s;
+  z-index: 10;
+  font-size: 15px;
+}
+
+.btn-next:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(194, 24, 91, 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #c2185b;
+  border: 1.5px solid #c2185b;
+  box-shadow: none;
+}
+
+/* ===== ENVELOPE ===== */
+.envelope-wrap {
+  position: relative;
+  width: 280px;
+  height: 190px;
+  margin: 0 auto 2rem;
+  cursor: pointer;
+}
+
+.envelope-body {
+  width: 100%; height: 100%;
+  background: linear-gradient(160deg, #fff0f5 0%, #ffd0e2 100%);
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 10px 35px rgba(160, 41, 77, 0.2);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0; left: 0; width: 0; height: 0;
+  border-left: 140px solid transparent;
+  border-right: 140px solid transparent;
+  border-top: 95px solid #f7b8cc;
+  transform-origin: top center;
+  transition: transform 0.9s cubic-bezier(0.4,0,0.2,1);
+  z-index: 2;
+}
+.envelope-wrap.open .envelope-flap { transform: rotateX(180deg); }
+
+.wax-seal {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 52px; height: 52px;
+  background: radial-gradient(circle at 35% 35%, #ff6b9d, #c2185b);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  z-index: 3;
+}
+
+/* ===== GENERAL UI ===== */
+.main-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(36px, 8vw, 64px);
+  color: #721c36;
+  line-height: 1.1;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  padding: 2.5rem 2rem;
+  border-radius: 2rem;
+  max-width: 320px;
+  text-align: center;
+  animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ===== GALLERY STYLES (KISI/GRID) ===== */
+.gallery-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  width: 100%;
+  padding: 20px;
+  /* Membuat area galeri bisa di-scroll secara independen jika perlu */
+  overflow-y: visible; 
+}
+
+@media (max-width: 480px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 kolom di HP */
+    gap: 10px;
+    padding: 10px;
+  }
+}
+
+.gallery-item {
+  aspect-ratio: 1 / 1;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: 0 8px 20px rgba(160, 41, 77, 0.1);
+  transition: transform 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.gallery-item.reveal {
+  animation: itemAppear 0.6s ease forwards;
+}
+
+@keyframes itemAppear {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.gallery-item:hover {
+  transform: scale(1.03);
+  z-index: 5;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.loading-bar-wrap {
+  width: 100%; height: 14px; background: rgba(160, 41, 77, 0.08);
+  border-radius: 20px; margin: 25px 0; overflow: hidden; display: none;
+}
+
+.loading-bar-fill {
+  width: 0%; height: 100%; background: linear-gradient(90deg, #ff8da1, #c2185b);
+  border-radius: 20px; transition: width 0.1s linear;
+}
+
+.hug-gif-wrap {
+  display: none;
+  width: 100%;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  margin-top: 1.5rem;
+}
+
+.nav-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(160, 41, 77, 0.25); transition: all 0.4s ease;
+}
+
+/* ===== FLIP CARD (PAGE 3) ===== */
+.flip-card-scene {
+  width: 100%;
+  max-width: 480px;
+  perspective: 1200px;
+  height: 68vh;
+  min-height: 340px;
+}
+
+.flip-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flip-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 2rem;
+  border: 1.5px solid rgba(160, 41, 77, 0.25);
+  box-shadow: 0 15px 40px rgba(160, 41, 77, 0.12);
+  padding: 2rem 1.8rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+.flip-card-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(160, 41, 77, 0.25) transparent;
+}
+
+.flip-card-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.flip-card-scroll::-webkit-scrollbar-thumb {
+  background: rgba(160, 41, 77, 0.25);
+  border-radius: 10px;
+}
+
+.flip-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.flip-page-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: 600;
+  color: #a0294d;
+  opacity: 0.55;
+}
+
+.flip-btn {
+  background: linear-gradient(135deg, #ff6b9d, #c2185b);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(194, 24, 91, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+
+.flip-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(194, 24, 91, 0.4);
+}
+
+.flip-hint {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: #a0294d;
+  font-weight: 600;
+  opacity: 0.5;
+  text-align: center;
+  margin-top: 0.8rem;
+  flex-shrink: 0;
+  animation: pulse-hint 2s ease-in-out infinite;
+}
+
+@keyframes pulse-hint {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="lagu.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="canvas-bg"></canvas>
+<div class="bg-mesh"></div>
+<div id="floating-container"></div>
+
+<!-- Modal Peringatan Game -->
+<div class="modal-overlay" id="gameModal">
+  <div class="modal-content">
+    <div style="font-size: 50px; margin-bottom: 15px;">🤭</div>
+    <h3 style="color: #c2185b; margin-bottom: 10px; font-family: 'Cormorant Garamond', serif; font-size: 24px;">Ga bisa milih kann...</h3>
+    <p style="font-weight: 500; color: #6d1b32; margin-bottom: 25px; font-size: 14px; line-height: 1.5;">Foto secantik ini masa dibilang jelek? cepet pencet tombol bagus!</p>
+    <button class="btn-next" style="width: 100%;" onclick="closeModal()">Oke, Bagus Kok!</button>
+  </div>
+</div>
+
+<!-- PAGE: LOGIN -->
+<div class="page active" id="pageLogin">
+  <div class="login-card">
+    <div style="font-family:'Cormorant Garamond',serif; font-size: 24px; font-weight: 600; color: #a0294d; margin-bottom: 1rem;">Akses Pesan Khusus</div>
+    <input type="password" id="passInput" class="login-input" placeholder="Masukkan Sandi">
+    <button class="login-btn" onclick="checkPass()">MASUK</button>
+    <p id="errorText" style="color:red; font-size:12px; margin-top:10px; display:none; font-weight: 600;">Sandi salah!</p>
+    <!-- Hint awalnya disembunyikan -->
+    <p id="hintText" style="color: #8a2e48; font-size: 11px; margin-top: 15px; opacity: 0.7; display: none;">Hint: Nama pendek pasanganmu</p>
+  </div>
+</div>
+
+<!-- PAGE: CHALLENGE (GAME) -->
+<div class="page" id="pageChallenge">
+  <div class="game-container">
+    <h2 style="font-family:'Cormorant Garamond',serif; color:#a0294d; margin-bottom: 15px; font-size: 26px;">Fotonya bagus kan? 😉</h2>
+    <div class="birthday-photo-frame">
+      <img src="https://i.ibb.co.com/nq65Xmzv/Blue-and-White-Minimalist-Happy-Birthday-Photo-Your-Story-1080-x-1080-piksel.png" alt="Happy Birthday Queenia">
+    </div>
+    <div class="btn-group" id="gameArea">
+      <button class="btn-next" onclick="goPage(1)">Bagus</button>
+      <button class="btn-next" id="btnJelek" onmouseover="moveButton()" onclick="moveButton()">Jelek</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 1: ENVELOPE -->
+<div class="page" id="page1" onclick="openEnvelope()">
+  <div style="font-family:'Cormorant Garamond',serif; font-weight:500; letter-spacing:2px; color:#8a2e48; margin-bottom:10px;">FOR</div>
+  <div class="main-name" style="margin-bottom:30px;">Queenia Yuanti</div>
+  <div class="envelope-wrap" id="envWrap">
+    <div class="envelope-body">
+      <div class="envelope-flap"></div>
+      <div class="wax-seal">🌸</div>
+    </div>
+  </div>
+  <div style="font-size: 11px; font-weight: 600; color: #a0294d; letter-spacing: 2px;">KETUK UNTUK MEMBUKA</div>
+</div>
+
+<!-- PAGE 2: WISH -->
+<div class="page" id="page2">
+  <div class="main-name">Selamat Ulang Tahun<br>Queenia Yuanti</div>
+  <p style="margin-top: 25px; padding: 0 20px; font-size: 18px; line-height: 1.6;">"Hope all your wishes come true, Your smile is my favorite view, and your happiness is my top priority."</p>
+  <button class="btn-next" style="margin-top: 30px;" onclick="goPage(3)">Baca Pesan →</button>
+</div>
+
+<!-- PAGE 3: MESSAGE (FLIP CARD) -->
+<div class="page" id="page3">
+  <div class="flip-card-scene">
+    <div class="flip-card" id="flipCard3">
+
+      <!-- SISI 1 (DEPAN) -->
+      <div class="flip-card-front">
+        <div class="flip-card-header">
+          <span class="flip-page-label">✦ HALAMAN 1 / 2 ✦</span>
+          <button class="flip-btn" onclick="document.getElementById('flipCard3').classList.add('flipped')">Halaman 2 →</button>
+        </div>
+        <div class="flip-card-scroll">
+          <p style="font-family: 'Cormorant Garamond', serif; font-size: 18px; line-height: 1.75; color: #4a1d33;">
+            Haii <span style="color: #c2185b; font-weight: 600;">Queennn</span>, selamat tambah usai yaa sayanggg. <br><br>
+            Makasii yaa uda selalu ada buat aku, uda bertahan sejauh ini sama aku, uda ngelewatin semua problem sampai saat ini, aku harap kamu bisa jadi wanita yang selalu ada buat aku, and bisa jadi supportku di setiap waktu. Semoga di umurmu yang ke-18 ini selalu ada hal baik yang datang buat sayangg, semogaa rezekimu lancar bagai air yang mengalir, semoga apa yang kamu pengenin bisa tercapai, aku slalu berdoa yang terbaik buat kamu pokonya.
+            <br><br>
+            <!-- ✏️ TEKS PANJANG PERTAMA DI SINI -->
+          </p>
+        </div>
+        <div class="flip-hint">↕ scroll · geser ke halaman 2 →</div>
+      </div>
+
+      <!-- SISI 2 (BELAKANG) -->
+      <div class="flip-card-back">
+        <div class="flip-card-header">
+          <button class="flip-btn" onclick="document.getElementById('flipCard3').classList.remove('flipped')">← Halaman 1</button>
+          <span class="flip-page-label">✦ HALAMAN 2 / 2 ✦</span>
+        </div>
+        <div class="flip-card-scroll">
+          <p style="font-family: 'Cormorant Garamond', serif; font-size: 18px; line-height: 1.75; color: #4a1d33;">
+            Aku pengen kita bisa sama-sama terus, nga cuma buat sekarang, tapi buat kedepan dan selamanya ya sayang. Maaf ya ayy kalo aku belum bisa ngasi big prize for u, tapi semoga kamu suka sama hadiah sederhana dari aku. Sekali lagi maaf yaa sayangg kalo aku belum bisa jadi kaya apa yang kamu pengen, tapi aku berusaha bakal jadi lebih baik lagi supaya sayang nyaman sama aku.
+          </p>
+          <div style="font-weight: 600; color: #c2185b; font-size: 20px; margin-top: 2rem; font-style: italic; text-align: right;">— Love Youu ♥</div>
+        </div>
+        <div class="flip-hint">↕ scroll · kembali ke halaman 1 ←</div>
+      </div>
+
+    </div>
+  </div>
+  <button class="btn-next" style="margin-top: 22px;" onclick="goPage(4)">Lanjutkan ✨</button>
+</div>
+
+<!-- PAGE 4: MENU -->
+<div class="page" id="page4">
+  <div class="main-name" style="font-size: 55px;">Happy Birthday!</div>
+  <div style="margin-top: 3rem; display: flex; flex-direction: column; gap: 15px; width: 100%; align-items: center;">
+    <button class="btn-next" style="background: linear-gradient(135deg, #ff6b9d, #e91e63); width: 220px;" onclick="goPage(6)">Get Virtual Hug</button>
+    <button class="btn-next" style="background: linear-gradient(135deg, #c2185b, #a0294d); width: 220px;" onclick="goPage(5)">Buka Galeri Kenangan</button>
+    <button class="btn-next btn-secondary" style="width: 220px; margin-top: 10px;" onclick="goPage(3)">← Sebelumnya</button>
+  </div>
+</div>
+
+<!-- PAGE 6: VIRTUAL HUG -->
+<div class="page" id="page6">
+  <div style="background:rgba(255,255,255,0.8); padding: 2.5rem; border-radius: 2.5rem; width: 100%; max-width: 400px; box-shadow: 0 20px 50px rgba(160, 41, 77, 0.1);">
+    <h2 id="hugStatus" style="font-family: 'Cormorant Garamond', serif; color: #c2185b; font-size: 28px; margin-bottom: 10px;">Pelukan Hangat</h2>
+    <p id="hugSub" style="font-size: 13px; color: #8a2e48; margin-bottom: 20px;">Rasakan kiriman kasih sayang ini.</p>
+    <div class="loading-bar-wrap" id="hugLoader"><div class="loading-bar-fill" id="hugProgress"></div></div>
+    <div class="hug-gif-wrap" id="hugAnim">
+      <img src="https://media.tenor.com/qwPwHfpv0fkAAAAM/puuung-puuung-hug.gif" alt="Pelukan" style="width: 100%;">
+    </div>
+    <button id="sendHugBtn" class="btn-next" style="width: 100%;" onclick="startSendingHug()">Kirim Pelukan</button>
+    <button id="backFromHug" class="btn-next btn-secondary" style="display: none; width: 100%; margin-top: 15px;" onclick="goPage(4)">Kembali</button>
+  </div>
+</div>
+
+<!-- PAGE 5: GALLERY (SISTEM KISI) -->
+<div class="page" id="page5">
+  <div class="gallery-container">
+    <h2 style="font-family:'Cormorant Garamond',serif; color:#a0294d; font-size: 36px; margin-bottom: 10px;">Galeri Kenangan</h2>
+    <p style="color: #8a2e48; margin-bottom: 20px; font-style: italic;">Setiap momen bersamamu adalah favoritku.</p>
+    
+    <div class="gallery-grid" id="galleryGrid">
+      <!-- Item Foto akan diisi oleh JavaScript -->
+    </div>
+
+    <div style="display: flex; gap: 15px; margin-top: 30px; margin-bottom: 40px;">
+      <button class="btn-next btn-secondary" onclick="goPage(4)">← Kembali</button>
+      <button class="btn-next" onclick="location.reload()">Mulai Lagi ↺</button>
+    </div>
+  </div>
+</div>
+
+<!-- NAV DOTS -->
+<div class="nav-dots" id="navContainer" style="position:fixed; bottom:30px; left:50%; transform:translateX(-50%); display:none; gap:10px; z-index:100;">
+  <div class="nav-dot" id="dot1"></div><div class="nav-dot" id="dot2"></div><div class="nav-dot" id="dot3"></div>
+  <div class="nav-dot" id="dot4"></div><div class="nav-dot" id="dot5"></div><div class="nav-dot" id="dot6"></div>
+</div>
+
+<script>
+// DAFTAR FOTO STATIS
+const staticPhotos = [
+  "https://i.ibb.co.com/cKx2J2gn/Foto-1.jpg", "https://i.ibb.co.com/zWX23W1T/Foto-2.jpg", "https://i.ibb.co.com/3yGNZrmm/Foto-3.jpg",
+  "https://i.ibb.co.com/Ngvd6b7k/Foto-4.jpg", "https://i.ibb.co.com/whKCXZ12/Foto-5.jpg", "https://i.ibb.co.com/1fC30yW1/Foto-6.jpg",
+  "https://i.ibb.co.com/pj1yDBcC/Foto-7.jpg", "https://i.ibb.co.com/1fqfg3Qh/Foto-8.jpg", "https://i.ibb.co.com/VYL784M3/Foto-9.jpg",
+  "https://i.ibb.co.com/46dsKqh/Foto-10.jpg", "https://i.ibb.co.com/YF902F0v/Foto-11.jpg", "https://i.ibb.co.com/m5MfwWNK/Foto-12.jpg",
+  "https://i.ibb.co.com/206b3kvP/Foto-13.jpg", "https://i.ibb.co.com/9mTHLGPL/Foto-14.jpg", "https://i.ibb.co.com/Gv4912MY/Foto-16.jpg",
+  "https://i.ibb.co.com/rfkVMq22/Foto-17.jpg", "https://i.ibb.co.com/dJHqYqC5/Foto-18.jpg", "https://i.ibb.co.com/HpCXQgkv/Foto-20.jpg",
+  "https://i.ibb.co.com/23T2vry4/Foto-21.jpg", "https://i.ibb.co.com/9kGJQFqV/Foto-22.jpg", "https://i.ibb.co.com/vxD3d5P3/Foto-23.jpg",
+  "https://i.ibb.co.com/1tsfpwzD/Foto-24.jpg", "https://i.ibb.co.com/S4nkW2M9/Foto-25.jpg", "https://i.ibb.co.com/BVyDsqwf/Foto-26.jpg",
+  "https://i.ibb.co.com/gFMbpK1V/Foto-27.jpg", "https://i.ibb.co.com/gbTPyPTX/Foto-28.jpg", "https://i.ibb.co.com/1GP60zPq/Foto-29.jpg"
+];
+
+let isTransitioning = false;
+let gameClickCount = 0;
+let loginAttempts = 0; // Hitung percobaan login
+const music = document.getElementById('bgMusic');
+
+function checkPass() {
+  const input = document.getElementById('passInput').value;
+  // Perubahan Password ke "Hanif" atau "hanif"
+  if(input === 'Hanif' || input === 'hanif') { 
+    goPage(0); 
+  }
+  else {
+    loginAttempts++;
+    document.getElementById('errorText').style.display = 'block';
+    
+    // Tampilkan hint setelah 1x salah
+    if (loginAttempts >= 1) {
+      document.getElementById('hintText').style.display = 'block';
+    }
+    
+    const card = document.querySelector('.login-card');
+    card.style.animation = 'shake 0.4s';
+    setTimeout(() => card.style.animation = '', 400);
+  }
+}
+
+function goPage(n) {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  
+  const current = document.querySelector('.page.active');
+  const targetId = n === 0 ? 'pageChallenge' : 'page' + n;
+  const target = document.getElementById(targetId);
+  
+  if (current) {
+    current.classList.add('fade-out');
+    current.classList.remove('active');
+  }
+  
+  setTimeout(() => {
+    if (current) {
+      current.style.display = 'none';
+      current.classList.remove('fade-out');
+    }
+    target.style.display = 'flex';
+    void target.offsetWidth;
+    target.classList.add('active');
+    
+    if (n === 5) renderGallery();
+    updateDots(n);
+    isTransitioning = false;
+  }, 500);
+}
+
+function updateDots(n) {
+  if (n < 1) return;
+  document.getElementById('navContainer').style.display = 'flex';
+  for(let i=1; i<=6; i++) {
+    const dot = document.getElementById('dot'+i);
+    if(dot) {
+      dot.style.background = i === n ? '#c2185b' : 'rgba(160, 41, 77, 0.25)';
+      dot.style.width = i === n ? '24px' : '8px';
+      dot.style.borderRadius = i === n ? '10px' : '50%';
+    }
+  }
+}
+
+function fadeInMusic() {
+  if (music.paused) {
+    music.volume = 0;
+    music.play().catch(() => {});
+    let vol = 0;
+    const interval = setInterval(() => {
+      vol += 0.05;
+      if (vol >= 0.7) { music.volume = 0.7; clearInterval(interval); }
+      else music.volume = vol;
+    }, 200);
+  }
+}
+
+function openEnvelope() {
+  fadeInMusic();
+  document.getElementById('envWrap').classList.add('open');
+  setTimeout(() => goPage(2), 1000);
+}
+
+function moveButton() {
+  gameClickCount++;
+  if (gameClickCount >= 5) {
+    document.getElementById('gameModal').style.display = 'flex';
+    return;
+  }
+  const btn = document.getElementById('btnJelek');
+  btn.style.position = 'absolute';
+  btn.style.left = Math.random() * 70 + 15 + '%';
+  btn.style.top = Math.random() * 70 + 15 + '%';
+}
+
+function closeModal() { document.getElementById('gameModal').style.display = 'none'; }
+
+function startSendingHug() {
+  const btn = document.getElementById('sendHugBtn');
+  const loader = document.getElementById('hugLoader');
+  const progress = document.getElementById('hugProgress');
+  
+  btn.style.display = 'none';
+  loader.style.display = 'block';
+  
+  let w = 0;
+  const timer = setInterval(() => {
+    w += 1.5;
+    progress.style.width = w + '%';
+    if (w >= 100) {
+      clearInterval(timer);
+      loader.style.display = 'none';
+      document.getElementById('hugAnim').style.display = 'block';
+      document.getElementById('hugStatus').innerText = 'Diterima! 🤗';
+      document.getElementById('backFromHug').style.display = 'block';
+      launchConfetti();
+    }
+  }, 30);
+}
+
+function renderGallery() {
+  const grid = document.getElementById('galleryGrid');
+  grid.innerHTML = ''; // Bersihkan
+  
+  staticPhotos.forEach((url, i) => {
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    item.innerHTML = `<img src="${url}" alt="Kenangan Queenia">`;
+    grid.appendChild(item);
+    
+    // Animasi muncul berurutan
+    setTimeout(() => item.classList.add('reveal'), i * 100);
+  });
+}
+
+// Latar Belakang & Animasi
+const canvas = document.getElementById('canvas-bg');
+const ctx = canvas.getContext('2d');
+let orbs = [], W, H;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+function initOrbs() {
+  orbs = [];
+  for (let i = 0; i < 8; i++) {
+    orbs.push({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 150 + 50,
+      color: `rgba(255, ${180 + Math.random()*50}, ${200 + Math.random()*50}, 0.1)`,
+      vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.2
+    });
+  }
+}
+
+function animate() {
+  ctx.clearRect(0,0,W,H);
+  orbs.forEach(o => {
+    o.x += o.vx; o.y += o.vy;
+    if(o.x < -o.r) o.x = W+o.r; if(o.x > W+o.r) o.x = -o.r;
+    if(o.y < -o.r) o.y = H+o.r; if(o.y > H+o.r) o.y = -o.r;
+    const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+    g.addColorStop(0, o.color); g.addColorStop(1, 'transparent');
+    ctx.beginPath(); ctx.arc(o.x, o.y, o.r, 0, Math.PI*2);
+    ctx.fillStyle = g; ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+
+function initFloating() {
+  const container = document.getElementById('floating-container');
+  const icons = ['🌸', '💖', '✨', '🎈', '❤️'];
+  for (let i = 0; i < 15; i++) {
+    const el = document.createElement('div');
+    el.className = 'floating-element';
+    el.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+    el.style.setProperty('--duration', (Math.random() * 8 + 10) + 's');
+    el.style.setProperty('--size', (Math.random() * 20 + 15) + 'px');
+    el.style.left = (Math.random() * 95) + 'vw';
+    el.style.animationDelay = (Math.random() * 10) + 's';
+    container.appendChild(el);
+  }
+}
+
+function launchConfetti() {
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('div');
+    c.style.cssText = `position:fixed; z-index:100; top:-10px; left:${Math.random()*100}vw; width:10px; height:10px; background:hsl(${Math.random()*360}, 70%, 75%); border-radius:50%; animation: fall ${Math.random()*2+2}s linear forwards;`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
+  }
+}
+
+window.onload = () => { resize(); initOrbs(); animate(); initFloating(); };
+window.onresize = resize;
+</script>
+
+<style>
+@keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  75% { transform: translateX(-10px); }
+}
+</style>
+</body>
+</html>
