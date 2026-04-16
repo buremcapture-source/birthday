@@ -502,14 +502,38 @@ body {
 <div class="page" id="page5">
   <div class="gallery-header">
     <h2 class="gallery-title">Galeri Kenangan</h2>
-    <label for="imageInput" class="btn-next" style="font-size: 11px; padding: 7px 14px; cursor: pointer;">
-      Upload
-    </label>
-    <input type="file" id="imageInput" accept="image/*">
   </div>
 
   <div class="gallery-grid" id="galleryGrid">
-    <p id="galleryStatus" style="grid-column: span 2; font-size: 13px; margin: 20px 0; color: #8a2e48;">Memuat kenangan...</p>
+    <div class="gallery-item"><img src="img/Foto (1).jpg" alt="Kenangan 1" onerror="this.src='img/Foto (1).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (2).jpg" alt="Kenangan 2" onerror="this.src='img/Foto (2).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (3).jpg" alt="Kenangan 3" onerror="this.src='img/Foto (3).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (4).jpg" alt="Kenangan 4" onerror="this.src='img/Foto (4).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (5).jpg" alt="Kenangan 5" onerror="this.src='img/Foto (5).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (6).jpg" alt="Kenangan 6" onerror="this.src='img/Foto (6).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (7).jpg" alt="Kenangan 7" onerror="this.src='img/Foto (7).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (8).jpg" alt="Kenangan 8" onerror="this.src='img/Foto (8).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (9).jpg" alt="Kenangan 9" onerror="this.src='img/Foto (9).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (10).jpg" alt="Kenangan 10" onerror="this.src='img/Foto (10).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (11).jpg" alt="Kenangan 11" onerror="this.src='img/Foto (11).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (12).jpg" alt="Kenangan 12" onerror="this.src='img/Foto (12).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (13).jpg" alt="Kenangan 13" onerror="this.src='img/Foto (13).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (14).jpg" alt="Kenangan 14" onerror="this.src='img/Foto (14).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (15).jpg" alt="Kenangan 15" onerror="this.src='img/Foto (15).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (16).jpg" alt="Kenangan 16" onerror="this.src='img/Foto (16).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (17).jpg" alt="Kenangan 17" onerror="this.src='img/Foto (17).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (18).jpg" alt="Kenangan 18" onerror="this.src='img/Foto (18).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (19).jpg" alt="Kenangan 19" onerror="this.src='img/Foto (19).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (20).jpg" alt="Kenangan 20" onerror="this.src='img/Foto (20).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (21).jpg" alt="Kenangan 21" onerror="this.src='img/Foto (21).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (22).jpg" alt="Kenangan 22" onerror="this.src='img/Foto (22).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (23).jpg" alt="Kenangan 23" onerror="this.src='img/Foto (23).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (24).jpg" alt="Kenangan 24" onerror="this.src='img/Foto (24).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (25).jpg" alt="Kenangan 25" onerror="this.src='img/Foto (25).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (26).jpg" alt="Kenangan 26" onerror="this.src='img/Foto (26).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (27).jpg" alt="Kenangan 27" onerror="this.src='img/Foto (27).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (28).jpg" alt="Kenangan 28" onerror="this.src='img/Foto (28).jpeg'"></div>
+    <div class="gallery-item"><img src="img/Foto (29).jpg" alt="Kenangan 29" onerror="this.src='img/Foto (29).jpeg'"></div>
   </div>
 
   <div style="display: flex; gap: 15px; width: 100%; max-width: 600px; justify-content: center; margin-bottom: 2rem;">
@@ -592,7 +616,7 @@ body {
       const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'memories', docId);
       await deleteDoc(docRef);
     } catch (err) {
-      // alert used here is restricted, but the code is kept as per original request.
+      alert("Gagal menghapus.");
     }
   };
 
@@ -622,7 +646,7 @@ body {
             userId: auth.currentUser.uid
           });
           imageInput.value = "";
-        } catch (err) { /* error handling */ }
+        } catch (err) { alert("Gagal upload."); }
       };
       img.src = event.target.result;
     };
@@ -805,7 +829,7 @@ function launchConfetti() {
   }
 }
 
-window.onload = function () { resize(); initOrbs(); draw(); initFloating(); };
+window.onload = () => { resize(); initOrbs(); draw(); initFloating(); };
 window.addEventListener('resize', resize);
 </script>
 
